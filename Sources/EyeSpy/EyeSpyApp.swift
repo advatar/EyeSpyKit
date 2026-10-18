@@ -31,11 +31,16 @@ import EyeSpyFeed
                         model.controller?.setCalibration(calibration)
                         model.calibrationStream = nil
                         model.status = "Tracking. Gaze samples are available on loopback."
-                    }.id(model.calibrationID)
+                    }
+                    .id(model.calibrationID)
+                    .overlay(alignment: .bottomTrailing) {
+                        Button("Stop") { model.stop() }.padding()
+                    }
                 }
                 ViewportReader { model.updateViewport($0) }.allowsHitTesting(false)
             }
             .frame(minWidth: 700, minHeight: 500)
+            .onDisappear { model.stop() }
             .onReceive(NotificationCenter.default.publisher(for: NSApplication.willTerminateNotification)) { _ in model.stop() }
         }
     }
